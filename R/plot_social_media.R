@@ -5,6 +5,7 @@
 ######################################################################################
 plot_fb_activities <- function(page, title, theme, color_scheme = NULL, lineplot = FALSE)
 {
+    require(dplyr)
     require(ggplot2)
     require(ggthemes)
 
