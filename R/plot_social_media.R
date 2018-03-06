@@ -1,5 +1,26 @@
 ######################################################################################
 #
+# Plot worldcloud
+# display color palettes > RColorBrewer::display.brewer.all()
+#
+######################################################################################
+plot_wordcloud <- function(tweets, n_colors = 5, palette)
+{
+    require(wordcloud)
+    require(RColorBrewer) # for brewer.pal()
+    require(smappR) # for word.frequencies()
+
+    wordFreq <- smappR::word.frequencies(tweets$text) ## word counts
+    wc <- wordcloud(words=names(wordFreq), freq=wordFreq, max.words=50,
+                    random.order=F,
+                    colors = brewer.pal(n_colors, palette),
+                    random.color = TRUE,
+                    scale=c(5.5,.5), rot.per=0) %>% recordPlot
+    return(wc)
+}
+
+######################################################################################
+#
 # Show FB activities : likes, comments, shares
 #
 ######################################################################################
