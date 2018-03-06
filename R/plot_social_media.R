@@ -22,7 +22,7 @@ plot_wordcloud <- function(tweets, n_colors = 5, palette)
 demo_twitter <- function()
 {
     require(ggplot2)
-    tweets <-  readRDS("R/tweetsSK.rds") # 2033 - 1738 NA = 295
+    tweets <-  readRDS("_input/tweetsSK.rds") # 2033 - 1738 NA = 295
 
     map.data <- map_data("world2")
     ggplot(map.data) +
@@ -45,8 +45,6 @@ demo_twitter <- function()
                    color = "blue") +
         coord_cartesian(xlim = c(123,131), ylim = c(34,38))
 }
-
-demo_twitter()
 
 ######################################################################################
 #
