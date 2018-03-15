@@ -31,7 +31,7 @@ plot_gtrends <- function(search_terms, gtrends_object = NULL,
         as.character()
 
     # create trend chart
-    gtrends_object$interest_over_time %>%
+    gg <- gtrends_object$interest_over_time %>%
         spread(keyword, hits) %>%
         # aes(color) specifies the colored geom's label, not the color!!
         ggplot(aes(x=date, color = `search term`)) +
@@ -42,6 +42,7 @@ plot_gtrends <- function(search_terms, gtrends_object = NULL,
                    function(search_term)
                        eval(parse(text=search_term)))
         }
+    return(gg)
 }
 
 ######################################################################################
