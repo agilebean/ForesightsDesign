@@ -4,12 +4,19 @@
 # display color palettes > RColorBrewer::display.brewer.all()
 #
 ######################################################################################
-plot_gtrends <- function(gtrends_object, search_terms,
+plot_gtrends <- function(search_terms, gtrends_object = NULL,
                          palette = "Set1", title = NULL)
 {
     require(ggplot2)
     require(dplyr)
     require(tidyr)
+
+    if (is.null(gtrends_object))
+    {
+        require(gtrendsR)
+        gtrends_object <- gtrends(search_terms)
+        gtrends_object$interest_over_time$hits %<>% as.numeric
+    }
 
     # set default title
     if (is.null(title)) title <- "Interest over time"
