@@ -1,5 +1,42 @@
 ######################################################################################
 #
+# Plot Google Trends
+# display color palettes > RColorBrewer::display.brewer.all()
+#
+######################################################################################
+plot_gtrends <- function(gtrends_object, search_terms,
+                         palette = "Set1", title = NULL)
+{
+    require(ggplot2)
+
+    # set default title
+    if (is.null(title)) title <- "Interest over time"
+
+    # create template for: geom_line(aes(y=`var`, color ="<var>"))
+    string.template <- "geom_line(aes(y=`<VAR>`, color ='<VAR>'))"
+    # create geom_line for each search term
+    geom.line.code <- search_terms %>%
+        lapply(function(x) {
+            gsub("<VAR>", x , string.template)
+        }) %>%
+        as.character()
+
+    # create trend chart
+    gtrends_object$interest_over_time %>%
+        spread(keyword, hits) %>%
+        # aes(color) specifies the colored geom's label, not the color!!
+        ggplot(aes(x=date, color = `search term`)) +
+        scale_color_brewer(palette = palette) +
+        ggtitle(title) +
+        {
+            lapply(geom.line.code,
+                   function(search_term)
+                       eval(parse(text=search_term)))
+        }
+}
+
+######################################################################################
+#
 # Plot worldcloud
 # display color palettes > RColorBrewer::display.brewer.all()
 #
