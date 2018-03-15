@@ -8,6 +8,7 @@ plot_gtrends <- function(gtrends_object, search_terms,
                          palette = "Set1", title = NULL)
 {
     require(ggplot2)
+    require(dplyr)
 
     # set default title
     if (is.null(title)) title <- "Interest over time"
