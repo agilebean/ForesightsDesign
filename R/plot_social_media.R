@@ -42,6 +42,7 @@ plot_gtrends <- function(search_terms, gtrends_object = NULL,
                    function(search_term)
                        eval(parse(text=search_term)))
         }
+    gg$gtrends <- gtrends_object
     return(gg)
 }
 
