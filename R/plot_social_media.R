@@ -56,6 +56,7 @@ plot_gtrends <- function(search_terms, gtrends_object = NULL,
 ######################################################################################
 plot_wordcloud <- function(tweets, n_colors = 5, palette)
 {
+    require(dplyr)
     require(wordcloud)
     require(RColorBrewer) # for brewer.pal()
     require(smappR) # for word.frequencies()
@@ -69,8 +70,16 @@ plot_wordcloud <- function(tweets, n_colors = 5, palette)
     return(wc)
 }
 
-demo_twitter <- function(mode)
+######################################################################################
+#
+# Demo twitter
+# Plots twitter activities
+#
+######################################################################################
+
+demo_twitter <- function(mode = NULL)
 {
+    require(dplyr)
     require(ggplot2)
 
     # get tweets object
@@ -79,23 +88,35 @@ demo_twitter <- function(mode)
     # get map.data: replaced ggplot2::map_data("world2") with saved data
     data("world2")
 
-    if (mode == "1")
+    if (is.null(mode))
     {
-        ggplot(map.data)
+        mode = 5
+    }
 
-    } else if (mode == "2")
-    {
-        ggplot(map.data) +
-            geom_map(aes(map_id = region), map = map.data, fill = "white",
-                     color = "grey20", size = 0.25) +
-            expand_limits(x = map.data$long, y = map.data$lat)
+    # world map full
+    gg <- ggplot(map.data) +
+        geom_map(aes(map_id = region), map = map.data, fill = "white",
+                 color = "grey20", size = 0.25) +
+        expand_limits(x = map.data$long, y = map.data$lat) +
+        ggtitle("Twitter on Trump")
 
-    } else if (mode == "3")
+    if (mode >= "1") # korean map
     {
-        ggplot(map.data) +
-            geom_map(aes(map_id = region), map = map.data, fill = "white",
-                     color = "grey20", size = 0.25) +
-            expand_limits(x = map.data$long, y = map.data$lat) +
+        gg <- gg +
+            coord_cartesian(xlim = c(123,131), ylim = c(34,38))
+    }
+    if (mode >= "2") # korean map with trump tweets
+    {
+        gg <- gg +
+            geom_point(data = tweets,
+                       aes(x = place_lon, y = place_lat),
+                       size = 8,
+                       alpha = 0.03,
+                       color = "blue")
+    }
+    if (mode >= "3") # korean map with trump tweets blank
+    {
+        gg <- gg +
             theme(
                 axis.line = element_blank(),
                 # axis.text = element_blank(),
@@ -105,29 +126,9 @@ demo_twitter <- function(mode)
                 panel.grid.major = element_blank(), plot.background = element_blank(),
                 plot.margin = unit(0 * c(-1.5, -1.5, -1.5, -1.5), "lines")
             )
-
-    } else {
-        ggplot(map.data) +
-            geom_map(aes(map_id = region), map = map.data, fill = "white",
-                     color = "grey20", size = 0.25) +
-            expand_limits(x = map.data$long, y = map.data$lat) +
-            theme(
-                axis.line = element_blank(),
-                # axis.text = element_blank(),
-                axis.ticks = element_blank(),
-                axis.title = element_blank(),
-                panel.background = element_blank(), panel.border = element_blank(),
-                panel.grid.major = element_blank(), plot.background = element_blank(),
-                plot.margin = unit(0 * c(-1.5, -1.5, -1.5, -1.5), "lines")
-            ) +
-            geom_point(data = tweets,
-                       aes(x = place_lon, y = place_lat),
-                       size = 8,
-                       alpha = 0.03,
-                       color = "blue") +
-            coord_cartesian(xlim = c(123,131), ylim = c(34,38))
     }
 
+    return(gg)
 }
 
 ######################################################################################
