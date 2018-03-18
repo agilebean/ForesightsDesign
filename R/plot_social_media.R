@@ -69,7 +69,7 @@ plot_wordcloud <- function(tweets, n_colors = 5, palette)
     return(wc)
 }
 
-demo_twitter <- function()
+demo_twitter <- function(mode)
 {
     require(ggplot2)
     tweets <-  data("tweetsSK") # 2033 - 1738 NA = 295
@@ -78,25 +78,55 @@ demo_twitter <- function()
     # replaced ggplot2::map_data with saved data
     map.data <- data("world2")
 
-    ggplot(map.data) +
-        geom_map(aes(map_id = region), map = map.data, fill = "white",
-                 color = "grey20", size = 0.25) +
-        expand_limits(x = map.data$long, y = map.data$lat) +
-        theme(
-            axis.line = element_blank(),
-            # axis.text = element_blank(),
-            axis.ticks = element_blank(),
-            axis.title = element_blank(),
-            panel.background = element_blank(), panel.border = element_blank(),
-            panel.grid.major = element_blank(), plot.background = element_blank(),
-            plot.margin = unit(0 * c(-1.5, -1.5, -1.5, -1.5), "lines")
-        ) +
-        geom_point(data = tweets,
-                   aes(x = place_lon, y = place_lat),
-                   size = 8,
-                   alpha = 0.03,
-                   color = "blue") +
-        coord_cartesian(xlim = c(123,131), ylim = c(34,38))
+    if (mode == "1")
+    {
+        ggplot(map.data)
+
+    } else if (mode == "2")
+    {
+        ggplot(map.data) +
+            geom_map(aes(map_id = region), map = map.data, fill = "white",
+                     color = "grey20", size = 0.25) +
+            expand_limits(x = map.data$long, y = map.data$lat)
+
+    } else if (mode == "3")
+    {
+        ggplot(map.data) +
+            geom_map(aes(map_id = region), map = map.data, fill = "white",
+                     color = "grey20", size = 0.25) +
+            expand_limits(x = map.data$long, y = map.data$lat) +
+            theme(
+                axis.line = element_blank(),
+                # axis.text = element_blank(),
+                axis.ticks = element_blank(),
+                axis.title = element_blank(),
+                panel.background = element_blank(), panel.border = element_blank(),
+                panel.grid.major = element_blank(), plot.background = element_blank(),
+                plot.margin = unit(0 * c(-1.5, -1.5, -1.5, -1.5), "lines")
+            )
+
+    } else {
+        ggplot(map.data) +
+            geom_map(aes(map_id = region), map = map.data, fill = "white",
+                     color = "grey20", size = 0.25) +
+            expand_limits(x = map.data$long, y = map.data$lat) +
+            theme(
+                axis.line = element_blank(),
+                # axis.text = element_blank(),
+                axis.ticks = element_blank(),
+                axis.title = element_blank(),
+                panel.background = element_blank(), panel.border = element_blank(),
+                panel.grid.major = element_blank(), plot.background = element_blank(),
+                plot.margin = unit(0 * c(-1.5, -1.5, -1.5, -1.5), "lines")
+            ) +
+            geom_point(data = tweets,
+                       aes(x = place_lon, y = place_lat),
+                       size = 8,
+                       alpha = 0.03,
+                       color = "blue") +
+            coord_cartesian(xlim = c(123,131), ylim = c(34,38))
+    }
+
 }
 
 ######################################################################################
