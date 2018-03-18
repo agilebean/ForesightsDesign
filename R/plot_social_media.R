@@ -50,33 +50,10 @@ plot_gtrends <- function(search_terms, gtrends_object = NULL,
 
 ######################################################################################
 #
-# Plot worldcloud
-# display color palettes > RColorBrewer::display.brewer.all()
-#
-######################################################################################
-plot_wordcloud <- function(tweets, n_colors = 5, palette)
-{
-    require(dplyr)
-    require(wordcloud)
-    require(RColorBrewer) # for brewer.pal()
-    require(smappR) # for word.frequencies()
-
-    wordFreq <- smappR::word.frequencies(tweets$text) ## word counts
-    wc <- wordcloud(words=names(wordFreq), freq=wordFreq, max.words=50,
-                    random.order=F,
-                    colors = brewer.pal(n_colors, palette),
-                    random.color = TRUE,
-                    scale=c(5.5,.5), rot.per=0) %>% recordPlot
-    return(wc)
-}
-
-######################################################################################
-#
 # Demo twitter
 # Plots twitter activities
 #
 ######################################################################################
-
 demo_twitter <- function(mode = NULL)
 {
     require(dplyr)
@@ -130,6 +107,61 @@ demo_twitter <- function(mode = NULL)
 
     return(gg)
 }
+
+######################################################################################
+#
+# Demo twitter
+# Plots twitter activities
+#
+######################################################################################
+plot_tweets_country <- function(tweet_object, map_object,
+                              size=10, alpha=0.1, color="blue")
+{
+    require(ggmap) # contains get_map from Google Maps!
+    require(comfort)
+    setwd(inputDV)
+
+    gg <- ggmap(map_object) +
+        theme(
+            axis.line = element_blank(),
+            axis.text = element_blank(),
+            axis.ticks = element_blank(),
+            axis.title = element_blank(),
+            panel.background = element_blank(), panel.border = element_blank(),
+            panel.grid.major = element_blank(), plot.background = element_blank(),
+            plot.margin = unit(0 * c(-1.5, -1.5, -1.5, -1.5), "lines")
+        ) +
+        geom_point(data = tweet_object,
+                   aes(x = place_lon, y = place_lat),
+                   size = size,
+                   alpha = alpha,
+                   color = color)
+    gg
+}
+
+######################################################################################
+#
+# Plot worldcloud
+# display color palettes > RColorBrewer::display.brewer.all()
+#
+######################################################################################
+plot_wordcloud <- function(tweets, n_colors = 5, palette)
+{
+    require(dplyr)
+    require(wordcloud)
+    require(RColorBrewer) # for brewer.pal()
+    require(smappR) # for word.frequencies()
+
+    wordFreq <- smappR::word.frequencies(tweets$text) ## word counts
+    wc <- wordcloud(words=names(wordFreq), freq=wordFreq, max.words=50,
+                    random.order=F,
+                    colors = brewer.pal(n_colors, palette),
+                    random.color = TRUE,
+                    scale=c(5.5,.5), rot.per=0) %>% recordPlot
+    return(wc)
+}
+
+
 
 ######################################################################################
 #
