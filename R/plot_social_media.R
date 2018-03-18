@@ -11,6 +11,7 @@ plot_gtrends <- function(search_terms, gtrends_object = NULL,
     require(dplyr)
     require(tidyr)
 
+    # create gtrends object from search_terms
     if (is.null(gtrends_object))
     {
         require(gtrendsR)
@@ -42,6 +43,7 @@ plot_gtrends <- function(search_terms, gtrends_object = NULL,
                    function(search_term)
                        eval(parse(text=search_term)))
         }
+    # add gtrends object to output to enable geom_smooth
     gg$gtrends <- gtrends_object
     return(gg)
 }
