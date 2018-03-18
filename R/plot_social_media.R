@@ -74,7 +74,10 @@ demo_twitter <- function()
     require(ggplot2)
     tweets <-  data("tweetsSK") # 2033 - 1738 NA = 295
 
-    map.data <- map_data("world2")
+    # map.data <- map_data("world2")
+    # replaced ggplot2::map_data with saved data
+    map.data <- data("world2")
+
     ggplot(map.data) +
         geom_map(aes(map_id = region), map = map.data, fill = "white",
                  color = "grey20", size = 0.25) +
