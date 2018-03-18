@@ -110,12 +110,14 @@ demo_twitter <- function(mode = NULL)
 
 ######################################################################################
 #
-# Demo twitter
+# plot_tweets_country()
+# tweet_object generated from streamR::filterStream(json.name) %>%
+#                             streamR::parseTweets()
 # Plots twitter activities
 #
 ######################################################################################
 plot_tweets_country <- function(tweet_object, map_object,
-                              size=10, alpha=0.1, color="blue")
+                              size=7, alpha=0.1, color="blue")
 {
     require(ggmap) # contains get_map from Google Maps!
     require(comfort)
