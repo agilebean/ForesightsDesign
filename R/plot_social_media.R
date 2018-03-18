@@ -72,7 +72,7 @@ plot_wordcloud <- function(tweets, n_colors = 5, palette)
 demo_twitter <- function()
 {
     require(ggplot2)
-    tweets <-  data("data/tweetsSK.rds") # 2033 - 1738 NA = 295
+    tweets <-  data("tweetsSK.rds") # 2033 - 1738 NA = 295
 
     map.data <- map_data("world2")
     ggplot(map.data) +
