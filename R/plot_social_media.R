@@ -72,11 +72,12 @@ plot_wordcloud <- function(tweets, n_colors = 5, palette)
 demo_twitter <- function(mode)
 {
     require(ggplot2)
-    tweets <-  data("tweetsSK") # 2033 - 1738 NA = 295
 
-    # map.data <- map_data("world2")
-    # replaced ggplot2::map_data with saved data
-    map.data <- data("world2")
+    # get tweets object
+    data("tweetsSK") # 2033 - 1738 NA = 295
+
+    # get map.data: replaced ggplot2::map_data("world2") with saved data
+    data("world2")
 
     if (mode == "1")
     {
