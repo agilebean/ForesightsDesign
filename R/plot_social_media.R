@@ -152,28 +152,15 @@ plot_wordcloud <- function(words, max_words = 70, remove_words ="",
 {
     require(dplyr)
     require(wordcloud)
-    require(RColorBrewer) # for brewer.pal()
-    require(tm) # for tm_map()
+    require(RColorBrewer)
+    require(tm)
 
     # remove all non-printable characters in UTF-8
     # Reason: http://www.textasdata.com/2015/02/encoding-headaches-emoticons-and-rs-handling-of-utf-816/
-    # words <- iconv(words, "ASCII", "UTF-8", sub="")
-    # words <- iconv(words, "ASCII", "UTF-8", sub="byte")
-
-    # words <- sapply(words, function(x) iconv(enc2utf8(x), sub = "byte"))
-    # for (i in 1:length(words))
-    # {
-    #     Encoding(words[[i]])="UTF-8"
-    # }
-
     words <- iconv(words, "ASCII", "UTF-8", sub="")
 
     words.corpus <- Corpus(VectorSource(words))
     words.corpus <- tm_map(words.corpus, removeWords, remove_words)
-    # words.corpus <- tm_map(words.corpus, content_transformer(stringi::stri_trans_tolower))
-    # words.corpus <- tm_map(words.corpus, function(x) iconv(x, to='UTF-8'))
-    # words.corpus <- tm_map(words.corpus, enc2utf8)
-
     words.corpus <- tm_map(words.corpus, tolower)
 
     wc <- wordcloud(words=words.corpus, max.words=max_words,

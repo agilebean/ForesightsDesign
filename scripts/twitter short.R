@@ -6,7 +6,7 @@ library(twitteR)
 library(dplyr)
 library(magrittr)
 library(comfort)
-# devtools::install_github("agilebean/ForesightsDesign")
+devtools::install_github("agilebean/ForesightsDesign")
 library(ForesightsDesign)
 
 #####################################################################
@@ -30,6 +30,7 @@ setup_twitter_oauth(consumer_key = "",
 
 
 # save authentication token for twitter
+setwd(credentialsDir)
 save(my_oauth, file="my_oauth")
 load(file="my_oauth")
 
@@ -46,16 +47,19 @@ setwd(inputDV)
 
 # # get tweets across US
 # json.name <- "tweetsUS.json"
-# streamR::filterStream(json.name, locations = c(-125, 25, -66, 50), 
+# streamR::filterStream(json.name, locations = c(-125, 25, -66, 50),
 #                       timeout = 60,
 #                       oauth = my_oauth)
 
+# get tweets from South Korea
+json.name <- "tweetsSK.json"
+
 # compare tweet activity
 json.name <- "tweetsPresidents.json"
-tweets.presidents <- streamR::parseTweets(json.name, simplify = TRUE)
-streamR::filterStream(json.name, track = c("Obama", "Trump"), 
-                      timeout = 120, 
-                      my_oauth)
+
+streamR::filterStream(json.name, track = c("Obama", "Trump"),
+                      timeout = 120,
+                      oauth = my_oauth)
 
 #####################################################################
 #  4. Parse Twitter Tweets
@@ -74,6 +78,18 @@ plot_tweets_country(tweets, map)
 #####################################################################
 #  6. Plot word clouds
 #####################################################################
-plot_wordcloud(tweets, 5, "Set1")
-plot_wordcloud(tweets, 9, "Dark2")
 
+words <- tweets$text
+
+plot_wordcloud(tweets, 5, "Set1")
+plot_wordcloud(tweets, 8, "Dark2")
+
+plot_wordcloud(words, n_colors = 8)
+
+plot_wordcloud(words, max_words = 70,
+               remove_words = c("https", "the", "and"),
+               n_colors = 8, palette = "Set1")
+
+plot_wordcloud(words, max_words = 70,
+               remove_words = c("https", "the", "and", "are", "this"),
+               n_colors = 8, palette = "Set1")
