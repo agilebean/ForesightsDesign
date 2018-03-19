@@ -147,7 +147,7 @@ plot_tweets_country <- function(tweet_object, map_object,
 # display color palettes > RColorBrewer::display.brewer.all()
 #
 ######################################################################################
-plot_wordcloud <- function(words, max_words = 50, remove_words,
+plot_wordcloud <- function(words, max_words = 70, remove_words ="",
                            n_colors = 5, palette = "Set1")
 {
     require(dplyr)
@@ -156,11 +156,27 @@ plot_wordcloud <- function(words, max_words = 50, remove_words,
     require(tm) # for tm_map()
 
     # remove all non-printable characters in UTF-8
-    words <- iconv(words, "ASCII", "UTF-8", sub="")
-    words <- Corpus(VectorSource(words))
-    words <- tm_map(words, removeWords, remove_words)
+    # Reason: http://www.textasdata.com/2015/02/encoding-headaches-emoticons-and-rs-handling-of-utf-816/
+    # words <- iconv(words, "ASCII", "UTF-8", sub="")
+    # words <- iconv(words, "ASCII", "UTF-8", sub="byte")
 
-    wc <- wordcloud(words=words, max.words=max_words,
+    # words <- sapply(words, function(x) iconv(enc2utf8(x), sub = "byte"))
+    # for (i in 1:length(words))
+    # {
+    #     Encoding(words[[i]])="UTF-8"
+    # }
+
+    words <- iconv(words, "ASCII", "UTF-8", sub="")
+
+    words.corpus <- Corpus(VectorSource(words))
+    words.corpus <- tm_map(words.corpus, removeWords, remove_words)
+    # words.corpus <- tm_map(words.corpus, content_transformer(stringi::stri_trans_tolower))
+    # words.corpus <- tm_map(words.corpus, function(x) iconv(x, to='UTF-8'))
+    # words.corpus <- tm_map(words.corpus, enc2utf8)
+
+    words.corpus <- tm_map(words.corpus, tolower)
+
+    wc <- wordcloud(words=words.corpus, max.words=max_words,
                     random.order=FALSE,
                     colors = brewer.pal(n_colors, palette),
                     random.color = FALSE,
