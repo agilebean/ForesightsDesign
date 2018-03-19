@@ -147,19 +147,24 @@ plot_tweets_country <- function(tweet_object, map_object,
 # display color palettes > RColorBrewer::display.brewer.all()
 #
 ######################################################################################
-plot_wordcloud <- function(tweets, n_colors = 5, palette)
+plot_wordcloud <- function(words, max_words = 50, remove_words,
+                           n_colors = 5, palette = "Set1")
 {
     require(dplyr)
     require(wordcloud)
     require(RColorBrewer) # for brewer.pal()
-    require(smappR) # for word.frequencies()
+    require(tm) # for tm_map()
 
-    wordFreq <- smappR::word.frequencies(tweets$text) ## word counts
-    wc <- wordcloud(words=names(wordFreq), freq=wordFreq, max.words=50,
-                    random.order=F,
+    # remove all non-printable characters in UTF-8
+    words <- iconv(words, "ASCII", "UTF-8", sub="")
+    words <- Corpus(VectorSource(words))
+    words <- tm_map(words, removeWords, remove_words)
+
+    wc <- wordcloud(words=words, max.words=max_words,
+                    random.order=FALSE,
                     colors = brewer.pal(n_colors, palette),
-                    random.color = TRUE,
-                    scale=c(5.5,.5), rot.per=0) %>% recordPlot
+                    random.color = FALSE,
+                    scale=c(5.5,.5), rot.per=0.35) %>% recordPlot
     return(wc)
 }
 
