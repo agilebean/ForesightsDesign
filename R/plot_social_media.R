@@ -16,7 +16,8 @@ plot_gtrends <- function(search_terms, gtrends_object = NULL,
     {
         require(gtrendsR)
         gtrends_object <- gtrends(search_terms)
-        gtrends_object$interest_over_time$hits %<>% as.numeric
+        gtrends_object$interest_over_time$hits <-
+            as.numeric(gtrends_object$interest_over_time$hits)
     }
 
     # set default title
