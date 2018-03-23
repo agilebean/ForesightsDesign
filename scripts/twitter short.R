@@ -6,14 +6,14 @@ library(twitteR)
 library(dplyr)
 library(magrittr)
 library(comfort)
-devtools::install_github("agilebean/ForesightsDesign")
+# devtools::install_github("agilebean/ForesightsDesign")
 library(ForesightsDesign)
 
 #####################################################################
 #  1. Example for Trend Analysis
 #####################################################################
 
-demo_twitter(0)
+demo_twitter(1)
 
 tweets
 map.data <- map_data("world2")
@@ -22,16 +22,16 @@ map.data <- map_data("world2")
 #  2. Get Twitter Access
 #####################################################################
 
-# Authenticating browserless: Go to Twitter App Page
-setup_twitter_oauth(consumer_key = "",
-                    consumer_secret = "",
-                    access_token = "",
-                    access_secret = "")
-
+# # Authenticating browserless: Go to Twitter App Page
+# setup_twitter_oauth(consumer_key = "",
+#                     consumer_secret = "",
+#                     access_token = "",
+#                     access_secret = "")
+#
 
 # save authentication token for twitter
 setwd(credentialsDir)
-save(my_oauth, file="my_oauth")
+# save(my_oauth, file="my_oauth")
 load(file="my_oauth")
 
 #####################################################################
