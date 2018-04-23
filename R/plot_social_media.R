@@ -142,6 +142,7 @@ plot_tweets_country <- function(tweet_object, map_object,
     gg
 }
 
+
 ######################################################################################
 #
 # Plot worldcloud
@@ -199,10 +200,35 @@ plot_tweets_by_keyword <- function(search_term, no_tweets, time_interval)
         )
 }
 
+######################################################################################
+#
+# plot_top_hashtags()
+# tweet_object generated from rtweet::search_tweets()
+# Plots twitter hashtags
+#
+######################################################################################
+plot_top_hashtags <- function(rtweet_object, no_hashtags, bar_color, chart_title)
+{
+    require(rtweet)
+    require(dplyr)
+    require(ggplot2)
+
+    rtweet_object$hashtags %>%
+        as.vector %>% unlist() %>%
+        table() %>%
+        as.data.frame() %>%
+        arrange(desc(Freq)) %>%
+        top_n(no_hashtags) %>%
+        ggplot(aes(x=reorder(., Freq), y=Freq)) +
+        geom_bar(stat = "identity", fill=bar_color) +
+        coord_flip() +
+        ggtitle(chart_title)
+}
+
 
 ######################################################################################
 #
-# plot_tweets_by_keyword()
+# plot_twitter_timelines()
 # tweet_object generated from rtweet::search_tweets() %>%
 #                             rtweet::ts_plot()
 # Plots twitter activities
