@@ -200,7 +200,52 @@ plot_tweets_by_keyword <- function(search_term, no_tweets, time_interval)
 }
 
 
+######################################################################################
+#
+# plot_tweets_by_keyword()
+# tweet_object generated from rtweet::search_tweets() %>%
+#                             rtweet::ts_plot()
+# Plots twitter activities
+#
+# display color palettes > RColorBrewer::display.brewer.all()
+#
+# The following palettes are recommended:
+# Accent, Dark2, Paired, Set1, Set2, Set3
+#
+#
+######################################################################################
+plot_twitter_timelines <- function(timeline_names, from_date, time_interval,
+                                   chart_title)
+{
+    require(rtweet)
+    require(dplyr)
+    require(ggplot2)
+    require(ggthemes)
 
+    print(paste("Searching twitter activity for", paste(timeline_names, collapse = ", ")))
+    print("This will take a while... Go get a coffee.")
+
+    timelines <- get_timelines(timeline_names, n = 3200)
+
+    timelines %>%
+        filter(created_at > from_date) %>%
+        group_by(screen_name) %>%
+        ts_plot(time_interval, trim = 1L) +
+        scale_color_brewer(palette = "Set1") +
+        geom_point() +
+        ggthemes::theme_economist() +
+        theme(
+            legend.title = ggplot2::element_blank(),
+            legend.position = "bottom",
+            plot.title = ggplot2::element_text(face = "bold")) +
+        labs(
+            x = NULL, y = NULL,
+            title = chart_title,
+            subtitle = paste0("Twitter status (tweet) counts aggregated by day from ", from_date),
+            caption = "\nSource: Data collected from Twitter's REST API via rtweet"
+        )
+
+}
 
 ######################################################################################
 #
