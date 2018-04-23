@@ -337,8 +337,7 @@ plot_fb_activities <- function(page, title, theme, color_scheme = NULL,
             geom_line(aes(y=comments_count, color="comments"), alpha = 0.2) +
             # scale_y_sqrt(breaks=c(250000, 500000, 1000000)) +
             # scale_y_log10() +
-            ylab("Counts of likes/shares/comments") +
-            theme_economist()
+            ylab("Counts of likes/shares/comments")
     }
     if (!is.null(scaling_factor)) {
 
