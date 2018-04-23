@@ -320,11 +320,25 @@ plot_fb_activities <- function(page, title, theme, color_scheme = NULL, lineplot
         ylab("Counts of likes/shares/comments") +
         color_scheme
 
-    # scatterplots for FB likes, comments, shares
-    tt <- tt.base +
-        geom_point(aes(y=likes_count, color="likes")) + # color string = name in legendå
-        geom_point(aes(y=shares_count, color="shares"), alpha = 0.9) +
-        geom_point(aes(y=comments_count, color="comments"), alpha = 0.2)
+    if(!lineplot)
+    {
+        # scatterplots for FB likes, comments, shares
+        tt <- tt.base +
+            geom_point(aes(y=likes_count, color="likes")) + # color string = name in legendå
+            geom_point(aes(y=shares_count, color="shares"), alpha = 0.9) +
+            geom_point(aes(y=comments_count, color="comments"), alpha = 0.2)
 
-    tt
+        tt
+    } else if (lineplot) {
+        tt.base +
+            geom_line(aes(y=likes_count, color="likes")) + # color string = name in legend
+            geom_line(aes(y=shares_count, color="shares"), alpha = 0.9) +
+            geom_line(aes(y=comments_count, color="comments"), alpha = 0.2) +
+            # scale_y_sqrt(breaks=c(250000, 500000, 1000000)) +
+            scale_y_log10() +
+            ylab("Counts of likes/shares/comments") +
+            theme_economist()
+    }
+
 }
+
