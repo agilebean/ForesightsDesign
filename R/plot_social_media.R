@@ -278,7 +278,9 @@ plot_twitter_timelines <- function(timeline_names, from_date, time_interval,
 # Show FB activities : likes, comments, shares
 #
 ######################################################################################
-plot_fb_activities <- function(page, title, theme, color_scheme = NULL, lineplot = FALSE)
+plot_fb_activities <- function(page, title, theme, color_scheme = NULL,
+                               lineplot = FALSE,
+                               scaling_factor = NULL)
 {
     require(dplyr)
     require(ggplot2)
@@ -316,7 +318,7 @@ plot_fb_activities <- function(page, title, theme, color_scheme = NULL, lineplot
         # scale_y_continuous(breaks=c(200000, 400000, 800000)) +
         # scale_y_sqrt(breaks=c(250000, 500000, 1000000)) +
         # scale_y_log10() +
-        scale_y_continuous(expand = c(0,0)) +
+        # scale_y_continuous(expand = c(0,0)) +
         ylab("Counts of likes/shares/comments") +
         color_scheme
 
@@ -328,17 +330,23 @@ plot_fb_activities <- function(page, title, theme, color_scheme = NULL, lineplot
             geom_point(aes(y=shares_count, color="shares"), alpha = 0.9) +
             geom_point(aes(y=comments_count, color="comments"), alpha = 0.2)
 
-        tt
     } else if (lineplot) {
-        tt.base +
+        tt <- tt.base +
             geom_line(aes(y=likes_count, color="likes")) + # color string = name in legend
             geom_line(aes(y=shares_count, color="shares"), alpha = 0.9) +
             geom_line(aes(y=comments_count, color="comments"), alpha = 0.2) +
             # scale_y_sqrt(breaks=c(250000, 500000, 1000000)) +
-            scale_y_log10() +
+            # scale_y_log10() +
             ylab("Counts of likes/shares/comments") +
             theme_economist()
     }
+    if (!is.null(scaling_factor)) {
 
+        tt <- tt +
+            scaling_factor
+    }
+
+    return(tt)
 }
+
 
