@@ -173,6 +173,34 @@ plot_wordcloud <- function(words, max_words = 70, remove_words ="",
 }
 
 
+######################################################################################
+#
+# plot_tweets_by_keyword()
+# tweet_object generated from rtweet::search_tweets() %>%
+#                             rtweet::ts_plot()
+# Plots twitter activities
+#
+######################################################################################
+plot_tweets_by_keyword <- function(search_term, no_tweets, time_interval)
+{
+    require(rtweet)
+    require(ggplot2)
+
+    tweets <- search_tweets(search_term, n=no_tweets, include_rts = FALSE)
+
+    ts_plot(tweets, time_interval) +
+        theme_minimal() +
+        theme(plot.title = element_text(face = "bold")) +
+        labs(
+            x = NULL, y = NULL,
+            title = paste0("Frequency of Twitter Tweets from past days for ", search_term),
+            subtitle = paste0("Twitter status (tweet) counts aggregated using a time interval of ", time_interval),
+            caption = "\nSource: Data collected from Twitter's REST API via rtweet"
+        )
+}
+
+
+
 
 ######################################################################################
 #
