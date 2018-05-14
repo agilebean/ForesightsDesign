@@ -1,95 +1,103 @@
 ############################################################################
-# 3.b) STREAM twitter tweets to JSON - streamR / twitteR package
+# Twitter Analysis
 ############################################################################
-library(streamR)
-library(twitteR)
+
+vignette("intro", package = "rtweet")
+library(rtweet)
 library(dplyr)
-library(magrittr)
-library(comfort)
-# devtools::install_github("agilebean/ForesightsDesign")
+library(ggplot2)
+devtools::install_github("agilebean/ForesightsDesign")
 library(ForesightsDesign)
 
-#####################################################################
-#  1. Example for Trend Analysis
-#####################################################################
+# Enter Callback URL in Twitter settings:
+# Callback URL="http://127.0.0.1:1410" in https://apps.twitter.com/app/14453776/settings
 
-demo_twitter(1)
+# get twitter credentials
+appname <- "<your appname>"
+key     <- "<your consumer key>"
+secret  <- "<your consumer secret>"
 
-tweets
-map.data <- map_data("world2")
+# generate twitter token
+twitter_token <- create_token(
+                    app = appname,
+                    consumer_key = key,
+                    consumer_secret = secret)
 
-#####################################################################
-#  2. Get Twitter Access
-#####################################################################
+# todo - save token: https://rud.is/b/2017/10/22/a-call-to-tweets-blog-posts/
 
-# # Authenticating browserless: Go to Twitter App Page
-# setup_twitter_oauth(consumer_key = "",
-#                     consumer_secret = "",
-#                     access_token = "",
-#                     access_secret = "")
-#
+############################################################################
+# A) SEARCH TWEETS (past)
+############################################################################
 
-# save authentication token for twitter
-setwd(credentialsDir)
-# save(my_oauth, file="my_oauth")
-load(file="my_oauth")
+# search tweets by hashtag
+tweets <- search_tweets("#maga",
+                        n=18000,
+                        # retryonratelimit=TRUE,
+                        type="recent",
+                        include_rts = FALSE)
 
-#####################################################################
-#  3. Stream Twitter Tweets
-#####################################################################
-setwd(inputDV)
 
-# # get Trump tweets: just retrieves ~428 tweets :(
-# twitter.name <- "realDonaldTrump"
-# tweets.raw <- twitteR::userTimeline(twitter.name, n = 3200)
-# tweets.raw %>% head
-# tweets.raw %>% length
+# search tweets by timeline
+tweets <- get_timeline("realDonaldTrump", n = 3200)
 
-# # get tweets across US
-# json.name <- "tweetsUS.json"
-# streamR::filterStream(json.name, locations = c(-125, 25, -66, 50),
-#                       timeout = 60,
-#                       oauth = my_oauth)
+tweets %>% ts_plot("12 hours")
+tweets %>% ts_plot("7 days")
 
-# get tweets from South Korea
-json.name <- "tweetsSK.json"
 
-# compare tweet activity
-json.name <- "tweetsPresidents.json"
+############################################################################
+# B) STREAM TWEETS (present)
+############################################################################
 
-streamR::filterStream(json.name, track = c("Obama", "Trump"),
-                      timeout = 120,
-                      oauth = my_oauth)
 
-#####################################################################
-#  4. Parse Twitter Tweets
-#####################################################################
+# 1. stream tweets by coordinates
+coordinates <- lookup_coords("new york")
 
-tweets <- streamR::parseTweets(json.name, verbose = FALSE)
+tweets_streamed <- stream_tweets(coordinates, timeout = 60)
+tweets_streamed
 
-#####################################################################
-#  5. Plot Twitter Tweets
-#####################################################################
+tweets_streamed %>% ts_plot("mins")
+tweets_streamed %>% print
 
-map <- ggmap::get_map(location = "United States", zoom = 4)
 
-plot_tweets_country(tweets, map)
+# 2. stream tweets by keyword
+keyword <- "kim jong un"
+file.name <- "kimjongun.json"
 
-#####################################################################
-#  6. Plot word clouds
-#####################################################################
+stream_tweets(keyword,
+              timeout = 60,
+              file_name = file.name,
+              parse = FALSE
+              )
 
-words <- tweets$text
+# read in the data as a tidy tbl data frame
+tweets_parsed <- parse_stream(file.name)
+tweets_parsed
+tweets_parsed %>% ts_plot("mins")
 
-plot_wordcloud(tweets, 5, "Set1")
-plot_wordcloud(tweets, 8, "Dark2")
 
-plot_wordcloud(words, n_colors = 8)
 
-plot_wordcloud(words, max_words = 70,
-               remove_words = c("https", "the", "and"),
-               n_colors = 8, palette = "Set1")
+############################################################################
+# C) PLOT TWEETS
+#  provided by library(ForesightsDesign)
+############################################################################
 
-plot_wordcloud(words, max_words = 70,
-               remove_words = c("https", "the", "and", "are", "this"),
-               n_colors = 8, palette = "Set1")
+## Plot tweets by keyword
+plot_tweets_by_keyword(search_term = "kim jong un",
+                       no_tweets = 10000,
+                       time_interval = "hours")
+
+
+## Plot top hashtags
+# requires tweets object from search or streaming function
+plot_top_hashtags(rtweet_object = tweets,
+                  no_hashtags = 12,
+                  bar_color = "darkgreen",
+                  chart_title = "This is the title")
+
+##
+# Plot tweets by several timelines
+plot_twitter_timelines(timeline_names = c("cnn", "BBCWorld", "foxnews"),
+                       from_date = "2018-04-21",
+                       time_interval = "days",
+                       chart_title = "Frequency of Twitter Tweets by News Organization")
+
