@@ -101,3 +101,17 @@ plot_twitter_timelines(timeline_names = c("cnn", "BBCWorld", "foxnews"),
                        time_interval = "days",
                        chart_title = "Frequency of Twitter Tweets by News Organization")
 
+############################################################################
+# D) PLOT WORDCLOUD
+#  provided by library(ForesightsDesign)
+############################################################################
+
+words <- tweets$text
+
+plot_wordcloud(words, n_colors = 8, "Set1")
+
+plot_wordcloud(words, max_words = 70,
+               remove_words = c("https", "the", "and", "are", "you",
+                                "this", "that","for", "have", "but"),
+               n_colors = 8, palette = "Dark2")
+
